@@ -45,7 +45,7 @@ func neighbor_finished(idx : int) -> void:
 		check_if_unreasonable_barriers()
 		while neighbors.has(null):
 			if is_inside_tree():
-				await get_tree().create_timer(randf_range(0,0.075)).timeout
+				await get_tree().create_timer(randf_range(0,0.2)).timeout
 				check_if_unreasonable_barriers()
 			else:
 				break
@@ -122,7 +122,6 @@ func check_if_unreasonable_barriers() -> void:
 			if neighbors[0]:
 				if neighbors[3].complete == true and neighbors[0].complete == false:
 					if neighbors[0].barriers.get_child(3).disabled == true:
-						
 						neighbors[0].barriers.get_child(1).disabled = true
 						neighbors[0].color_barriers.get_child(1).hide()
 						barriers.get_child(0).disabled = true
@@ -141,6 +140,7 @@ func check_if_unreasonable_barriers() -> void:
 func _on_up_entered(area: Area2D) -> void:
 	area.get_parent().finished.connect(neighbor_finished.bind(0))
 	neighbors[0] = area.get_parent()
+	finished.connect(neighbors[0].neighbor_finished.bind(1))
 	if up:
 		up.queue_free()
 	if complete:
@@ -150,6 +150,7 @@ func _on_up_entered(area: Area2D) -> void:
 func _on_down_entered(area: Area2D) -> void:
 	area.get_parent().finished.connect(neighbor_finished.bind(1))
 	neighbors[1] = area.get_parent()
+	finished.connect(neighbors[1].neighbor_finished.bind(0))
 	if down:
 		down.queue_free()
 	if complete:
@@ -158,6 +159,7 @@ func _on_down_entered(area: Area2D) -> void:
 func _on_left_entered(area: Area2D) -> void:
 	area.get_parent().finished.connect(neighbor_finished.bind(2))
 	neighbors[2] = area.get_parent()
+	finished.connect(neighbors[2].neighbor_finished.bind(3))
 	if left:
 		left.queue_free()
 	if complete:
@@ -166,6 +168,7 @@ func _on_left_entered(area: Area2D) -> void:
 func _on_right_entered(area: Area2D) -> void:
 	area.get_parent().finished.connect(neighbor_finished.bind(3))
 	neighbors[3] = area.get_parent()
+	finished.connect(neighbors[3].neighbor_finished.bind(2))
 	if right:
 		right.queue_free()
 	if complete:
@@ -175,8 +178,6 @@ func _on_right_entered(area: Area2D) -> void:
 func _on_object_removed_detect_area_exited(area: Area2D) -> void:
 	object_list.erase(area.get_parent())
 	if len(object_list) <= 0:
-		print(self)
-		print("^ New chunk unlocked")
 		if complete == false:
 			game.new_chunk_unlocked(floor(global_position / 256))
 		emit_signal("finished")
