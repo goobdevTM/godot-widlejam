@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://cj5p6el4c361c"]
+
+[ext_resource type="Texture2D" uid="uid://dqt7gjlaerikr" path="res://sprites/shop.png" id="1_lx5au"]
+[ext_resource type="Script" uid="uid://b0tvrx0tctkdy" path="res://scripts/shop.gd" id="1_xfvoa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lx5au"]
+size = Vector2(56, 29)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1l46r"]
+size = Vector2(48, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xfvoa"]
+size = Vector2(48, 2)
+
+[node name="Shop" type="Node2D"]
+script = ExtResource("1_xfvoa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_lx5au")
+
+[node name="SortArea" type="Area2D" parent="."]
+position = Vector2(0, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SortArea"]
+position = Vector2(0, -19.5)
+shape = SubResource("RectangleShape2D_lx5au")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="SortArea"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_1l46r")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_xfvoa")
+
+[connection signal="body_entered" from="SortArea" to="." method="_on_sort_area_body_entered"]
+[connection signal="body_exited" from="SortArea" to="." method="_on_sort_area_body_exited"]

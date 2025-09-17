@@ -1,0 +1,317 @@
+[gd_scene load_steps=33 format=3 uid="uid://dtivlhk22so28"]
+
+[ext_resource type="Script" uid="uid://bdmoicq0nhmfm" path="res://scripts/world.gd" id="1_gee14"]
+[ext_resource type="Texture2D" uid="uid://cpcds2af1rj2q" path="res://sprites/player/glaggle.png" id="1_lbhrr"]
+[ext_resource type="Script" uid="uid://bg3d41jvctvnv" path="res://scripts/game.gd" id="1_trtic"]
+[ext_resource type="PackedScene" uid="uid://brunj3a6qwm7s" path="res://scenes/chunk.tscn" id="2_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://cj5p6el4c361c" path="res://scenes/shop.tscn" id="2_dinhu"]
+[ext_resource type="Texture2D" uid="uid://7x4l03wbgq3r" path="res://sprites/player/eyes.png" id="2_iywne"]
+[ext_resource type="Script" uid="uid://ct88xc2fqao55" path="res://scripts/player.gd" id="2_p57ef"]
+[ext_resource type="Texture2D" uid="uid://2jaah1fv78tb" path="res://sprites/player/mouth.png" id="3_p57ef"]
+[ext_resource type="Texture2D" uid="uid://bw7nacc3uneuj" path="res://sprites/particles/leaf2.png" id="4_gee14"]
+[ext_resource type="Texture2D" uid="uid://lcpciu5cqh5c" path="res://sprites/particles/leaf1.png" id="6_p57ef"]
+[ext_resource type="Texture2D" uid="uid://cxi0gk4mmce4f" path="res://sprites/player/hand.png" id="9_0tnpc"]
+[ext_resource type="AudioStream" uid="uid://brt4570tq30uj" path="res://audio/sfx/punch.ogg" id="10_kvpfn"]
+[ext_resource type="AudioStream" uid="uid://dpuu0hpoq1f8" path="res://audio/music/main.ogg" id="10_vtaks"]
+[ext_resource type="AudioStream" uid="uid://drcecyjrre0q3" path="res://audio/sfx/new_chunk.ogg" id="13_kvuet"]
+[ext_resource type="Script" uid="uid://dqcqgmx3b2cxg" path="res://scripts/gui.gd" id="15_ca42v"]
+[ext_resource type="FontFile" uid="uid://d02sjlnm01c71" path="res://fonts/papyrus.ttf" id="15_ir15t"]
+[ext_resource type="Texture2D" uid="uid://blvhfr4o7dp5f" path="res://sprites/map.png" id="17_rysoc"]
+[ext_resource type="FontFile" uid="uid://ddd0djkuaf70w" path="res://fonts/Vaticanus-G3yVG.ttf" id="20_1kice"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gee14"]
+radius = 7.07107
+
+[sub_resource type="Curve" id="Curve_0tnpc"]
+_data = [Vector2(0, 1), 0.0, 4.96629, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vtaks"]
+curve = SubResource("Curve_0tnpc")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u5sy4"]
+particle_flag_disable_z = true
+angle_min = -720.0
+angle_max = 720.0
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 20.0
+gravity = Vector3(0, 60, 0)
+alpha_curve = SubResource("CurveTexture_vtaks")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vtaks"]
+size = Vector2(4, 4)
+
+[sub_resource type="Animation" id="Animation_p57ef"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_iywne"]
+resource_name = "fade"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_p57ef"]
+_data = {
+&"RESET": SubResource("Animation_p57ef"),
+&"fade": SubResource("Animation_iywne")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0tnpc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_iywne")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vtaks"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_p57ef")
+}],
+"loop": true,
+"name": &"smile",
+"speed": 5.0
+}]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_trtic"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("13_kvuet")
+
+[sub_resource type="Animation" id="Animation_ca42v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -64)]
+}
+
+[sub_resource type="Animation" id="Animation_ir15t"]
+resource_name = "scroll"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -64), Vector2(0, 180)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ca42v"]
+_data = {
+&"RESET": SubResource("Animation_ca42v"),
+&"scroll": SubResource("Animation_ir15t")
+}
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_trtic")
+
+[node name="World" type="Node2D" parent="."]
+script = ExtResource("1_gee14")
+
+[node name="Chunk" parent="World" instance=ExtResource("2_0tnpc")]
+first = true
+
+[node name="Shop" parent="World" instance=ExtResource("2_dinhu")]
+
+[node name="Effects" type="Node2D" parent="."]
+z_index = -100
+
+[node name="Dash" type="Node2D" parent="Effects"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("2_p57ef")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_gee14")
+
+[node name="WalkParticles" type="Node2D" parent="Player"]
+z_index = -100
+
+[node name="Leaf1" type="GPUParticles2D" parent="Player/WalkParticles"]
+z_index = -100
+position = Vector2(0, 7)
+emitting = false
+amount = 3
+texture = ExtResource("6_p57ef")
+preprocess = 0.2
+process_material = SubResource("ParticleProcessMaterial_u5sy4")
+
+[node name="Leaf2" type="GPUParticles2D" parent="Player/WalkParticles"]
+z_index = -100
+position = Vector2(0, 7)
+emitting = false
+amount = 3
+texture = ExtResource("4_gee14")
+preprocess = 0.2
+process_material = SubResource("ParticleProcessMaterial_u5sy4")
+
+[node name="HandOffset" type="Node2D" parent="Player"]
+
+[node name="Hand" type="Node2D" parent="Player/HandOffset"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Player/HandOffset/Hand"]
+texture = ExtResource("9_0tnpc")
+
+[node name="HandArea" type="Area2D" parent="Player/HandOffset/Hand"]
+collision_layer = 16
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/HandOffset/Hand/HandArea"]
+shape = SubResource("RectangleShape2D_vtaks")
+
+[node name="Model" type="Node2D" parent="Player"]
+
+[node name="Anim" type="AnimationPlayer" parent="Player/Model"]
+libraries = {
+&"": SubResource("AnimationLibrary_p57ef")
+}
+
+[node name="Body" type="Sprite2D" parent="Player/Model"]
+texture = ExtResource("1_lbhrr")
+
+[node name="Eyes" type="AnimatedSprite2D" parent="Player/Model"]
+sprite_frames = SubResource("SpriteFrames_0tnpc")
+autoplay = "default"
+
+[node name="Mouth" type="AnimatedSprite2D" parent="Player/Model"]
+sprite_frames = SubResource("SpriteFrames_vtaks")
+animation = &"smile"
+autoplay = "smile"
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position_smoothing_speed = 0.0
+
+[node name="PunchSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("10_kvpfn")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_vtaks")
+autoplay = true
+
+[node name="NewChunk" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_trtic")
+
+[node name="GUI" type="CanvasLayer" parent="."]
+script = ExtResource("15_ca42v")
+
+[node name="Control" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NewChunkText" type="RichTextLabel" parent="GUI/Control"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -154.0
+offset_bottom = -89.99994
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("15_ir15t")
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]New Chunks Unlocked!"
+fit_content = true
+
+[node name="NewChunkSubtext" type="RichTextLabel" parent="GUI/Control/NewChunkText"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.0
+offset_top = -3.0517578e-05
+offset_right = 74.0
+offset_bottom = 20.99997
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("15_ir15t")
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+text = "[center][X: 0, Y: 0]"
+fit_content = true
+
+[node name="Anim" type="AnimationPlayer" parent="GUI/Control/NewChunkText"]
+libraries = {
+&"": SubResource("AnimationLibrary_ca42v")
+}
+
+[node name="Minimap" type="Sprite2D" parent="GUI"]
+position = Vector2(25, 33)
+texture = ExtResource("17_rysoc")
+
+[node name="MinimapContainer" type="SubViewportContainer" parent="GUI/Minimap"]
+offset_left = -20.0
+offset_top = -28.0
+offset_right = 20.0
+offset_bottom = 12.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="GUI/Minimap/MinimapContainer"]
+handle_input_locally = false
+size = Vector2i(40, 40)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="GUI/Minimap/MinimapContainer/SubViewport"]
+zoom = Vector2(0.1, 0.1)
+
+[node name="MinimapCoords" type="RichTextLabel" parent="GUI/Minimap"]
+offset_left = -23.0
+offset_top = 13.0
+offset_right = 23.0
+offset_bottom = 27.0
+theme_override_fonts/normal_font = ExtResource("20_1kice")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "[center][1000,1000]"
+
+[connection signal="area_entered" from="Player/HandOffset/Hand/HandArea" to="Player" method="_on_hand_area_area_entered"]

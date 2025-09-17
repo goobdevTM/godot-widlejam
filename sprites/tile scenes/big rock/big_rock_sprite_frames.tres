@@ -1,0 +1,32 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://dyb6feaqacei8"]
+
+[ext_resource type="Texture2D" uid="uid://nm0s0cpccnch" path="res://sprites/tile scenes/big rock/break1.png" id="1_5rcf4"]
+[ext_resource type="Texture2D" uid="uid://cjhna37muvg2i" path="res://sprites/tile scenes/big rock/default.png" id="1_prt2t"]
+[ext_resource type="Texture2D" uid="uid://dljrakipi0rgp" path="res://sprites/tile scenes/big rock/break2.png" id="2_cvyxs"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_5rcf4")
+}],
+"loop": true,
+"name": &"break1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_cvyxs")
+}],
+"loop": true,
+"name": &"break2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_prt2t")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]

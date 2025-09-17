@@ -1,0 +1,135 @@
+[gd_scene load_steps=12 format=3 uid="uid://b3mjmnbllqod7"]
+
+[ext_resource type="Script" uid="uid://do3s7ngj52fmj" path="res://scripts/object.gd" id="1_cbfvs"]
+[ext_resource type="SpriteFrames" uid="uid://dyb6feaqacei8" path="res://sprites/tile scenes/big rock/big_rock_sprite_frames.tres" id="2_a0y2b"]
+[ext_resource type="Texture2D" uid="uid://cjhna37muvg2i" path="res://sprites/tile scenes/big rock/default.png" id="3_a0y2b"]
+
+[sub_resource type="Animation" id="Animation_a0y2b"]
+resource_name = "hit"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -1), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.09, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0698132, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_a03g0"]
+resource_name = "hit2"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -1), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.00999999, 0.1, 0.21),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0698132, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_46pka"]
+resource_name = "hit3"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a03g0"]
+_data = {
+&"hit": SubResource("Animation_a0y2b"),
+&"hit2": SubResource("Animation_a03g0"),
+&"hit3": SubResource("Animation_46pka")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a0y2b"]
+
+[sub_resource type="Curve" id="Curve_6qvdj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.011236), -5.73034, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_a03g0"]
+curve = SubResource("Curve_6qvdj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_46pka"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+gravity = Vector3(0, 98, 0)
+scale_min = 0.1
+scale_max = 0.2
+alpha_curve = SubResource("CurveTexture_a03g0")
+
+[node name="Object" type="Node2D" groups=["pickaxe"]]
+script = ExtResource("1_cbfvs")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_a0y2b")
+autoplay = "default"
+
+[node name="Anim" type="AnimationPlayer" parent="AnimatedSprite2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_a03g0")
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_a0y2b")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_a0y2b")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+emitting = false
+texture = ExtResource("3_a0y2b")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_46pka")
