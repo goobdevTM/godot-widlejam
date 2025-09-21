@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://i87cn7btor5v"]
+
+[ext_resource type="Script" uid="uid://sfbephxib1e1" path="res://scripts/enemy.gd" id="1_7p1mj"]
+[ext_resource type="Texture2D" uid="uid://chj3s1tjeb702" path="res://sprites/enemies/pumpkin.png" id="2_4ra3w"]
+[ext_resource type="Texture2D" uid="uid://cvd84qfidneki" path="res://sprites/enemies/pumpkin_eyes.png" id="3_5uy6h"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ra3w"]
+radius = 128.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5uy6h"]
+radius = 7.0
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_mask = 8
+script = ExtResource("1_7p1mj")
+
+[node name="Model" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Model"]
+texture = ExtResource("2_4ra3w")
+
+[node name="Eyes" type="Sprite2D" parent="Model"]
+texture = ExtResource("3_5uy6h")
+
+[node name="PlayerArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerArea"]
+shape = SubResource("CircleShape2D_4ra3w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_5uy6h")
+
+[connection signal="body_entered" from="PlayerArea" to="." method="_on_player_area_body_entered"]
+[connection signal="body_exited" from="PlayerArea" to="." method="_on_player_area_body_exited"]

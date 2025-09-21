@@ -13,9 +13,18 @@ extends Node2D
 @onready var barriers: StaticBody2D = $Barriers
 @onready var color_barriers: Node2D = $Grass/ColorBarriers
 
+@onready var text_data: RichTextLabel = $Grass/TextData
+
+
 @export var first : bool = false
 
+
+
 signal finished
+
+var chunk_pos : Vector2i = Vector2i(0,0)
+
+var has_neigbors : bool = false
 
 var neighbors : Array = [null, null, null, null]
 
@@ -25,10 +34,25 @@ var complete : bool = false
 
 var object_list : Array[Node2D] = []
 
+var on_screen : bool
+
 func _ready() -> void:
-	await get_tree().create_timer(0).timeout
+	if first:
+		text_data.hide()
+	chunk_pos = Vector2i(round(global_position / 256))
+	if Global.chunks.has(chunk_pos):
+		queue_free()
+	#scale = Vector2(randf_range(0.5, 1), randf_range(0.5, 1))
+	while not Global.chunks.has(chunk_pos):
+		if is_inside_tree():
+			await get_tree().create_timer(0.05).timeout
+	Global.chunks[chunk_pos] = self
+	print(Global.chunks.has(chunk_pos))
+	Global.new_chunk_generated.connect(update_neighbors_from_dict)
+	Global.emit_signal("new_chunk_generated")
 	unc = true
-	
+
+
 	
 func generate_objects() -> void:
 	for x in range(-8, 8):
@@ -36,9 +60,22 @@ func generate_objects() -> void:
 			if randi_range(0, 10) <= 0:
 				objects.set_cell(Vector2i(x,y), 1, Vector2i(0, 0), 1)
 				
+	while len(object_list) <= 0:
+		await get_tree().create_timer(0.1).timeout
+		text_data.text = "[center]" + str(len(object_list))
+		
 
 
 func neighbor_finished(idx : int) -> void:
+	if is_inside_tree():
+		var timer : SceneTreeTimer = get_tree().create_timer(0.05)
+		while neighbors[idx].barriers:
+			if is_inside_tree():
+				await timer.timeout
+				timer.time_left = 0.05
+			else:
+				timer.timeout
+		await get_tree().create_timer(0.05).timeout
 	if barriers:
 		barriers.get_child(idx).disabled = true
 		color_barriers.get_child(idx).hide()
@@ -48,6 +85,7 @@ func neighbor_finished(idx : int) -> void:
 				await get_tree().create_timer(randf_range(0,0.2)).timeout
 				check_if_unreasonable_barriers()
 			else:
+				has_neigbors = true
 				break
 
 func check_if_unreasonable_barriers() -> void:
@@ -145,6 +183,7 @@ func _on_up_entered(area: Area2D) -> void:
 		up.queue_free()
 	if complete:
 		area.get_parent().neighbor_finished(0)
+	has_neigbors = not neighbors.has(null)
 
 
 func _on_down_entered(area: Area2D) -> void:
@@ -155,7 +194,8 @@ func _on_down_entered(area: Area2D) -> void:
 		down.queue_free()
 	if complete:
 		area.get_parent().neighbor_finished(1)
-		
+	has_neigbors = not neighbors.has(null)
+	
 func _on_left_entered(area: Area2D) -> void:
 	area.get_parent().finished.connect(neighbor_finished.bind(2))
 	neighbors[2] = area.get_parent()
@@ -164,7 +204,8 @@ func _on_left_entered(area: Area2D) -> void:
 		left.queue_free()
 	if complete:
 		area.get_parent().neighbor_finished(2)
-		
+	has_neigbors = not neighbors.has(null)
+	
 func _on_right_entered(area: Area2D) -> void:
 	area.get_parent().finished.connect(neighbor_finished.bind(3))
 	neighbors[3] = area.get_parent()
@@ -173,11 +214,13 @@ func _on_right_entered(area: Area2D) -> void:
 		right.queue_free()
 	if complete:
 		area.get_parent().neighbor_finished(3)
-		
+	has_neigbors = not neighbors.has(null)
 		
 func _on_object_removed_detect_area_exited(area: Area2D) -> void:
 	object_list.erase(area.get_parent())
+	text_data.text = "[center]" + str(len(object_list))
 	if len(object_list) <= 0:
+		text_data.hide()
 		if complete == false:
 			game.new_chunk_unlocked(floor(global_position / 256))
 		emit_signal("finished")
@@ -185,3 +228,16 @@ func _on_object_removed_detect_area_exited(area: Area2D) -> void:
 		if barriers:
 			color_barriers.queue_free()
 			barriers.queue_free()
+
+func update_neighbors_from_dict() -> void:
+	if not has_neigbors:
+		if Global.chunks.has(chunk_pos + Vector2i(0,-1)): # up
+			neighbors[0] = Global.chunks[chunk_pos + Vector2i(0,-1)]
+		if Global.chunks.has(chunk_pos + Vector2i(0,1)): # down
+			neighbors[1] = Global.chunks[chunk_pos + Vector2i(0,1)]
+		if Global.chunks.has(chunk_pos + Vector2i(-1,0)): # left
+			neighbors[2] = Global.chunks[chunk_pos + Vector2i(-1,0)]
+		if Global.chunks.has(chunk_pos + Vector2i(1,0)): # right
+			neighbors[3] = Global.chunks[chunk_pos + Vector2i(1,0)]
+	else:
+		Global.new_chunk_generated.disconnect(update_neighbors_from_dict)

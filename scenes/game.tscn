@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://dtivlhk22so28"]
+[gd_scene load_steps=49 format=3 uid="uid://dtivlhk22so28"]
 
 [ext_resource type="Script" uid="uid://bdmoicq0nhmfm" path="res://scripts/world.gd" id="1_gee14"]
 [ext_resource type="Texture2D" uid="uid://cpcds2af1rj2q" path="res://sprites/player/glaggle.png" id="1_lbhrr"]
@@ -9,15 +9,26 @@
 [ext_resource type="Script" uid="uid://ct88xc2fqao55" path="res://scripts/player.gd" id="2_p57ef"]
 [ext_resource type="Texture2D" uid="uid://2jaah1fv78tb" path="res://sprites/player/mouth.png" id="3_p57ef"]
 [ext_resource type="Texture2D" uid="uid://bw7nacc3uneuj" path="res://sprites/particles/leaf2.png" id="4_gee14"]
+[ext_resource type="PackedScene" uid="uid://i87cn7btor5v" path="res://scenes/enemy.tscn" id="5_bhx41"]
 [ext_resource type="Texture2D" uid="uid://lcpciu5cqh5c" path="res://sprites/particles/leaf1.png" id="6_p57ef"]
 [ext_resource type="Texture2D" uid="uid://cxi0gk4mmce4f" path="res://sprites/player/hand.png" id="9_0tnpc"]
 [ext_resource type="AudioStream" uid="uid://brt4570tq30uj" path="res://audio/sfx/punch.ogg" id="10_kvpfn"]
 [ext_resource type="AudioStream" uid="uid://dpuu0hpoq1f8" path="res://audio/music/main.ogg" id="10_vtaks"]
+[ext_resource type="Texture2D" uid="uid://bdloidpd026hr" path="res://sprites/tools/pickaxe/wood_pickaxe.png" id="12_pl11u"]
 [ext_resource type="AudioStream" uid="uid://drcecyjrre0q3" path="res://audio/sfx/new_chunk.ogg" id="13_kvuet"]
 [ext_resource type="Script" uid="uid://dqcqgmx3b2cxg" path="res://scripts/gui.gd" id="15_ca42v"]
 [ext_resource type="FontFile" uid="uid://d02sjlnm01c71" path="res://fonts/papyrus.ttf" id="15_ir15t"]
+[ext_resource type="AudioStream" uid="uid://bc0jhe6hmvuvc" path="res://audio/sfx/dice.ogg" id="17_qnb83"]
 [ext_resource type="Texture2D" uid="uid://blvhfr4o7dp5f" path="res://sprites/map.png" id="17_rysoc"]
+[ext_resource type="AudioStream" uid="uid://rfjhy8g8j6d" path="res://audio/sfx/kaching.ogg" id="18_sww3w"]
+[ext_resource type="AudioStream" uid="uid://bdswwdkqitrpv" path="res://audio/sfx/buzzer.ogg" id="19_suyxu"]
 [ext_resource type="FontFile" uid="uid://ddd0djkuaf70w" path="res://fonts/Vaticanus-G3yVG.ttf" id="20_1kice"]
+[ext_resource type="Theme" uid="uid://cy2pfkk5apl5x" path="res://wood_theme.tres" id="22_37s47"]
+[ext_resource type="Script" uid="uid://b4ty8xwt7qqxi" path="res://scripts/shop_ui.gd" id="22_bt5mj"]
+[ext_resource type="PackedScene" uid="uid://dvi450plrvrsl" path="res://scenes/slot.tscn" id="23_bt5mj"]
+[ext_resource type="Texture2D" uid="uid://bhnwlcsxtvdp5" path="res://sprites/hud_bg.png" id="23_e1j6l"]
+[ext_resource type="PackedScene" uid="uid://leukxke74n2q" path="res://scenes/upgrade_button.tscn" id="24_e1j6l"]
+[ext_resource type="FontFile" uid="uid://bpe01d1f7o71h" path="res://fonts/StepalangeShort-p7GZd.otf" id="25_pl11u"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gee14"]
 radius = 7.07107
@@ -40,7 +51,7 @@ gravity = Vector3(0, 60, 0)
 alpha_curve = SubResource("CurveTexture_vtaks")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vtaks"]
-size = Vector2(4, 4)
+size = Vector2(8, 19)
 
 [sub_resource type="Animation" id="Animation_p57ef"]
 length = 0.001
@@ -106,6 +117,19 @@ random_pitch = 1.1
 streams_count = 1
 stream_0/stream = ExtResource("13_kvuet")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_sww3w"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("17_qnb83")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_suyxu"]
+streams_count = 1
+stream_0/stream = ExtResource("18_sww3w")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_sgl2t"]
+streams_count = 1
+stream_0/stream = ExtResource("19_suyxu")
+
 [sub_resource type="Animation" id="Animation_ca42v"]
 length = 0.001
 tracks/0/type = "value"
@@ -143,6 +167,18 @@ _data = {
 &"scroll": SubResource("Animation_ir15t")
 }
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1j6l"]
+bg_color = Color(0.16078432, 0.047058824, 0.02745098, 0.2509804)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5newe"]
+bg_color = Color(0.16078432, 0.047058824, 0.02745098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 3
+corner_detail = 1
+anti_aliasing = false
+
 [node name="Game" type="Node2D"]
 script = ExtResource("1_trtic")
 
@@ -154,12 +190,16 @@ first = true
 
 [node name="Shop" parent="World" instance=ExtResource("2_dinhu")]
 
+[node name="Enemy" parent="World" instance=ExtResource("5_bhx41")]
+position = Vector2(-44, -57)
+
 [node name="Effects" type="Node2D" parent="."]
 z_index = -100
 
 [node name="Dash" type="Node2D" parent="Effects"]
 
-[node name="Player" type="CharacterBody2D" parent="."]
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+collision_mask = 8
 script = ExtResource("2_p57ef")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
@@ -193,11 +233,15 @@ process_material = SubResource("ParticleProcessMaterial_u5sy4")
 [node name="Sprite2D" type="Sprite2D" parent="Player/HandOffset/Hand"]
 texture = ExtResource("9_0tnpc")
 
-[node name="HandArea" type="Area2D" parent="Player/HandOffset/Hand"]
+[node name="Tool" type="Sprite2D" parent="Player/HandOffset/Hand"]
+texture = ExtResource("12_pl11u")
+
+[node name="HandArea" type="Area2D" parent="Player/HandOffset/Hand/Tool"]
 collision_layer = 16
 collision_mask = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/HandOffset/Hand/HandArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/HandOffset/Hand/Tool/HandArea"]
+position = Vector2(0, -1.5)
 shape = SubResource("RectangleShape2D_vtaks")
 
 [node name="Model" type="Node2D" parent="Player"]
@@ -223,16 +267,39 @@ autoplay = "smile"
 position_smoothing_speed = 0.0
 
 [node name="PunchSound" type="AudioStreamPlayer" parent="Player"]
+process_mode = 3
 stream = ExtResource("10_kvpfn")
+volume_db = -4.0
+bus = &"SFX"
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 stream = ExtResource("10_vtaks")
 autoplay = true
+bus = &"Music"
 
 [node name="NewChunk" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 stream = SubResource("AudioStreamRandomizer_trtic")
+bus = &"SFX"
+
+[node name="Reroll" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = SubResource("AudioStreamRandomizer_sww3w")
+bus = &"SFX"
+
+[node name="Money" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = SubResource("AudioStreamRandomizer_suyxu")
+bus = &"SFX"
+
+[node name="Buzzer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = SubResource("AudioStreamRandomizer_sgl2t")
+bus = &"SFX"
 
 [node name="GUI" type="CanvasLayer" parent="."]
+process_mode = 3
 script = ExtResource("15_ca42v")
 
 [node name="Control" type="Control" parent="GUI"]
@@ -297,6 +364,7 @@ offset_bottom = 12.0
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="GUI/Minimap/MinimapContainer"]
+transparent_bg = true
 handle_input_locally = false
 size = Vector2i(40, 40)
 render_target_update_mode = 4
@@ -304,7 +372,7 @@ render_target_update_mode = 4
 [node name="Camera2D" type="Camera2D" parent="GUI/Minimap/MinimapContainer/SubViewport"]
 light_mask = 0
 visibility_layer = 3
-zoom = Vector2(0.1, 0.1)
+zoom = Vector2(0.156, 0.156)
 
 [node name="MinimapCoords" type="RichTextLabel" parent="GUI/Minimap"]
 offset_left = -23.0
@@ -316,4 +384,129 @@ theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "[center][1000,1000]"
 
-[connection signal="area_entered" from="Player/HandOffset/Hand/HandArea" to="Player" method="_on_hand_area_area_entered"]
+[node name="HUDBackground" type="Sprite2D" parent="GUI"]
+position = Vector2(160, 164)
+texture = ExtResource("23_e1j6l")
+
+[node name="HUD" type="HBoxContainer" parent="GUI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -38.0
+offset_top = -28.0
+offset_right = 38.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="Slot" parent="GUI/HUD" instance=ExtResource("23_bt5mj")]
+layout_mode = 2
+
+[node name="Slot2" parent="GUI/HUD" instance=ExtResource("23_bt5mj")]
+layout_mode = 2
+
+[node name="Slot3" parent="GUI/HUD" instance=ExtResource("23_bt5mj")]
+layout_mode = 2
+
+[node name="DarkBG" type="Panel" parent="GUI"]
+process_mode = 3
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 100.0
+offset_bottom = 84.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_e1j6l")
+
+[node name="Money" type="RichTextLabel" parent="GUI"]
+clip_contents = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -129.0
+offset_top = 5.0
+offset_right = -4.0
+offset_bottom = 31.0
+grow_horizontal = 0
+theme_override_colors/default_color = Color(0.8509804, 0.21960784, 0.21960784, 1)
+theme_override_colors/font_outline_color = Color(0.16078432, 0.047058824, 0.02745098, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/normal_font = ExtResource("25_pl11u")
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[right]$0"
+
+[node name="ShopUI" type="Control" parent="GUI"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 26.0
+offset_right = -32.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 48)
+theme = ExtResource("22_37s47")
+script = ExtResource("22_bt5mj")
+
+[node name="BG" type="Panel" parent="GUI/ShopUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5newe")
+
+[node name="Title" type="RichTextLabel" parent="GUI/ShopUI"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 16.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("20_1kice")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "[center]Shop"
+
+[node name="Reroll" type="Button" parent="GUI/ShopUI"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+theme = ExtResource("22_37s47")
+theme_override_font_sizes/font_size = 8
+text = "Re-roll ($5)"
+
+[node name="Upgrades" type="HBoxContainer" parent="GUI/ShopUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 23.0
+offset_right = -12.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="1" parent="GUI/ShopUI/Upgrades" instance=ExtResource("24_e1j6l")]
+layout_mode = 2
+
+[node name="2" parent="GUI/ShopUI/Upgrades" instance=ExtResource("24_e1j6l")]
+layout_mode = 2
+
+[node name="3" parent="GUI/ShopUI/Upgrades" instance=ExtResource("24_e1j6l")]
+layout_mode = 2
+
+[connection signal="area_entered" from="Player/HandOffset/Hand/Tool/HandArea" to="Player" method="_on_hand_area_area_entered"]
+[connection signal="pressed" from="GUI/ShopUI/Reroll" to="GUI/ShopUI" method="reroll"]

@@ -12,7 +12,6 @@ func _ready() -> void:
 		index += 1
 
 
-
 func generate_chunk(pos : Vector2, direction : int, from : VisibleOnScreenNotifier2D, wait : bool) -> void:
 	if wait:
 		await get_tree().create_timer(randf_range(0.03, 0.07)).timeout

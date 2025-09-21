@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=4 uid="uid://brunj3a6qwm7s"]
+[gd_scene load_steps=10 format=4 uid="uid://brunj3a6qwm7s"]
 
 [ext_resource type="Texture2D" uid="uid://dvxp0p0jaban6" path="res://sprites/tiles.png" id="1_jas4a"]
 [ext_resource type="Script" uid="uid://cau5a545bi02q" path="res://scripts/chunk.gd" id="1_jtw3q"]
 [ext_resource type="PackedScene" uid="uid://b3mjmnbllqod7" path="res://scenes/object.tscn" id="3_c3gog"]
+[ext_resource type="FontFile" uid="uid://c1rbege7qvcvu" path="res://fonts/Stepalange-x3BLm.otf" id="4_y5xp6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jtw3q"]
 size = Vector2(254, 254)
@@ -154,13 +155,25 @@ offset_right = 129.0
 offset_bottom = 129.0
 color = Color(0.16078432, 0.047058824, 0.02745098, 1)
 
+[node name="TextData" type="RichTextLabel" parent="Grass"]
+offset_left = -128.0
+offset_top = -16.0
+offset_right = 128.0
+offset_bottom = 21.0
+theme_override_colors/default_color = Color(0.96862745, 0.42352942, 0.24313726, 1)
+theme_override_colors/font_outline_color = Color(0.6117647, 0.15294118, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/normal_font = ExtResource("4_y5xp6")
+theme_override_font_sizes/normal_font_size = 38
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+text = "[center]10"
+fit_content = true
+scroll_active = false
+
 [node name="Objects" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAD6/wQAAQAAAAAAAQA=")
 tile_set = SubResource("TileSet_dinhu")
-
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
-position = Vector2(-1.14441e-05, -1.14441e-05)
-scale = Vector2(12.8, 12.8)
 
 [node name="ObjectRemovedDetect" type="Area2D" parent="."]
 collision_layer = 4
@@ -170,6 +183,7 @@ collision_mask = 8
 shape = SubResource("RectangleShape2D_jtw3q")
 
 [node name="Barriers" type="StaticBody2D" parent="."]
+collision_layer = 8
 
 [node name="Up" type="CollisionShape2D" parent="Barriers"]
 position = Vector2(0, -128)
@@ -193,6 +207,4 @@ shape = SubResource("RectangleShape2D_c3gog")
 [connection signal="area_entered" from="Right" to="." method="_on_right_entered"]
 [connection signal="area_entered" from="Up" to="." method="_on_up_entered"]
 [connection signal="area_entered" from="Down" to="." method="_on_down_entered"]
-[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
-[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
 [connection signal="area_exited" from="ObjectRemovedDetect" to="." method="_on_object_removed_detect_area_exited"]

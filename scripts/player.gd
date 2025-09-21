@@ -10,6 +10,8 @@ class_name Player
 @onready var hand_offset: Node2D = $HandOffset
 @onready var hand: Node2D = $HandOffset/Hand
 @onready var punch_sound: AudioStreamPlayer = $PunchSound
+@onready var tool_sprite: Sprite2D = $HandOffset/Hand/Tool
+@onready var hand_collision: CollisionShape2D = $HandOffset/Hand/Tool/HandArea/CollisionShape2D
 
 
 enum ToolTypes {
@@ -21,7 +23,7 @@ enum ToolTypes {
 const WALK_SPEED : int = 100
 const DASH_SPEED : int = 200
 
-var attack_speed : float = 0.1
+var attack_speed : float = 0.05
 var speed : int = 20
 var friction : float = 0.7
 var direction : Vector2
@@ -31,8 +33,12 @@ var walking : bool = false
 var swing_dir : Vector2
 var swinging : bool = false
 var swing_cooldown : float = 0
-var tool_type : ToolTypes = ToolTypes.PICKAXE
+var tool_type : ToolTypes = ToolTypes.SWORD
 
+func _ready() -> void:
+	Global.hotbar_swapped.connect(change_tool)
+	await get_tree().create_timer(0).timeout
+	Global.emit_signal("hotbar_swapped")
 
 func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
@@ -49,22 +55,29 @@ func _physics_process(delta: float) -> void:
 		
 		
 	if swing_cooldown <= attack_speed - (attack_speed / 5):
+		hand_collision.disabled = true
 		swinging = false
 	
 	swing_dir = Input.get_vector("swing_left", "swing_right", "swing_up", "swing_down")
 	var old_rot : float = hand_offset.rotation
 	hand_offset.look_at(position + swing_dir)
+	tool_sprite.look_at(position + swing_dir)
+	tool_sprite.rotation += deg_to_rad(-90)
 	var new_rot : float = hand_offset.rotation
 	hand_offset.rotation = old_rot
 	hand_offset.rotation = lerp(hand_offset.rotation, new_rot, delta * 20)
 	if swing_dir and swing_cooldown <= 0:
+		punch_sound.play()
+		hand_collision.disabled = false
 		swinging = true
 		swing_cooldown = attack_speed
 		hand.position = Vector2(0,0)
 		
 	if swinging:
-		hand.position = lerp(hand.position, Vector2(12,0), delta * 40)
+		tool_sprite.scale = lerp(tool_sprite.scale, Vector2(1,1), delta * 60)
+		hand.position = lerp(hand.position, Vector2(24,0), delta * 40)
 	else:
+		tool_sprite.scale = lerp(tool_sprite.scale, Vector2(0,0), delta * 20)
 		hand.position = lerp(hand.position, Vector2(0,0), delta * 12)
 		
 	hand.global_rotation = 0
@@ -89,7 +102,28 @@ func _physics_process(delta: float) -> void:
 	
 	speed = lerp(speed, WALK_SPEED, delta * 20)
 	
+	
+	if Input.is_action_just_pressed("1"):
+		tool_type = ToolTypes.SWORD
+		Global.selected_slot = 0
+		Global.emit_signal("hotbar_swapped")
+		
+	if Input.is_action_just_pressed("2"):
+		tool_type = ToolTypes.PICKAXE
+		Global.selected_slot = 1
+		Global.emit_signal("hotbar_swapped")
+		
+	if Input.is_action_just_pressed("3"):
+		tool_type = ToolTypes.AXE
+		Global.selected_slot = 2
+		Global.emit_signal("hotbar_swapped")
+		
+		
 	move_and_slide()
+	
+func change_tool() -> void:
+	await get_tree().create_timer(0).timeout
+	tool_sprite.texture = Global.current_tool_sprite
 
 func dash(dash_idx) -> void:
 	for i in range(3):
@@ -112,16 +146,10 @@ func _on_hand_area_area_entered(area: Area2D) -> void:
 	match tool_type:
 		ToolTypes.PICKAXE:
 			if object.is_in_group("pickaxe"):
-				object.hit(2)
-			else:
-				punch_sound.play()
+				object.hit(Global.pickaxes[Global.pickaxe_tier]['damage'])
 		ToolTypes.AXE:
 			if object.is_in_group("axe"):
-				object.hit(2)
-			else:
-				punch_sound.play()
+				object.hit(Global.axes[Global.axe_tier]['damage'])
 		ToolTypes.SWORD:
 			if object.is_in_group("sword"):
-				object.hit(2)
-			else:
-				punch_sound.play()
+				object.hit(Global.swords[Global.sword_tier]['damage'])

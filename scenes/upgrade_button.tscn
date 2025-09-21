@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://leukxke74n2q"]
+
+[ext_resource type="Texture2D" uid="uid://40vp38fdghmv" path="res://sprites/tools/pickaxe/iron_pickaxe.png" id="1_mdhk6"]
+[ext_resource type="FontFile" uid="uid://ddd0djkuaf70w" path="res://fonts/Vaticanus-G3yVG.ttf" id="2_isks0"]
+
+[node name="Button" type="Button"]
+custom_minimum_size = Vector2(80, 64)
+offset_right = 80.0
+offset_bottom = 64.0
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(40, 32)
+scale = Vector2(2, 2)
+texture = ExtResource("1_mdhk6")
+
+[node name="Cost" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_bottom = 12.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("2_isks0")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "[center]$50"
+
+[node name="Name" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 55.0
+offset_bottom = 63.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("2_isks0")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "[center]Name"
+fit_content = true

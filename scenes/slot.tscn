@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvi450plrvrsl"]
+
+[ext_resource type="Texture2D" uid="uid://c5dej5ievla5" path="res://sprites/slot.png" id="1_4v6ba"]
+[ext_resource type="Texture2D" uid="uid://cca2w8lu12tb2" path="res://sprites/slot_hover.png" id="2_ic0fu"]
+[ext_resource type="Texture2D" uid="uid://hqd0kakg8vmo" path="res://sprites/tools/sword/copper_sword.png" id="3_vqyee"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vqyee"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_4v6ba")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ic0fu")
+}],
+"loop": true,
+"name": &"hover",
+"speed": 5.0
+}]
+
+[node name="Slot" type="Control"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 3
+anchors_preset = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(12, 12)
+sprite_frames = SubResource("SpriteFrames_vqyee")
+animation = &"hover"
+
+[node name="Item" type="Sprite2D" parent="."]
+position = Vector2(12, 12)
+texture = ExtResource("3_vqyee")

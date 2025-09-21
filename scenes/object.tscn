@@ -1,8 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://b3mjmnbllqod7"]
+[gd_scene load_steps=16 format=3 uid="uid://b3mjmnbllqod7"]
 
 [ext_resource type="Script" uid="uid://do3s7ngj52fmj" path="res://scripts/object.gd" id="1_cbfvs"]
 [ext_resource type="SpriteFrames" uid="uid://dyb6feaqacei8" path="res://sprites/tile scenes/big rock/big_rock_sprite_frames.tres" id="2_a0y2b"]
 [ext_resource type="Texture2D" uid="uid://cjhna37muvg2i" path="res://sprites/tile scenes/big rock/default.png" id="3_a0y2b"]
+[ext_resource type="AudioStream" uid="uid://oytgo6iey5gq" path="res://audio/sfx/pickaxe_hit.ogg" id="4_6qvdj"]
+[ext_resource type="AudioStream" uid="uid://b2gadi3vpwlll" path="res://audio/sfx/pickaxe_break.ogg" id="5_a03g0"]
 
 [sub_resource type="Animation" id="Animation_a0y2b"]
 resource_name = "hit"
@@ -102,6 +104,16 @@ scale_min = 0.1
 scale_max = 0.2
 alpha_curve = SubResource("CurveTexture_a03g0")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_a03g0"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("4_6qvdj")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_46pka"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("5_a03g0")
+
 [node name="Object" type="Node2D" groups=["pickaxe"]]
 script = ExtResource("1_cbfvs")
 
@@ -115,6 +127,7 @@ libraries = {
 }
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("CircleShape2D_a0y2b")
@@ -133,3 +146,11 @@ lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_46pka")
+
+[node name="MineSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_a03g0")
+bus = &"SFX"
+
+[node name="BreakSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_46pka")
+bus = &"SFX"
