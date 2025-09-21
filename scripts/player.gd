@@ -12,6 +12,7 @@ class_name Player
 @onready var punch_sound: AudioStreamPlayer = $PunchSound
 @onready var tool_sprite: Sprite2D = $HandOffset/Hand/Tool
 @onready var hand_collision: CollisionShape2D = $HandOffset/Hand/Tool/HandArea/CollisionShape2D
+@onready var hurt_sound: AudioStreamPlayer = $HurtSound
 
 
 enum ToolTypes {
@@ -20,11 +21,7 @@ enum ToolTypes {
 	SWORD
 }
 
-const WALK_SPEED : int = 100
-const DASH_SPEED : int = 200
-
-var attack_speed : float = 0.05
-var speed : int = 20
+var speed : float = 20
 var friction : float = 0.7
 var direction : Vector2
 var dash_cooldown : float = 0
@@ -34,6 +31,8 @@ var swing_dir : Vector2
 var swinging : bool = false
 var swing_cooldown : float = 0
 var tool_type : ToolTypes = ToolTypes.SWORD
+var hurt_cooldown : float = 1
+var dead : bool
 
 func _ready() -> void:
 	Global.hotbar_swapped.connect(change_tool)
@@ -45,16 +44,19 @@ func _physics_process(delta: float) -> void:
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	dash_cooldown -= delta
 	swing_cooldown -= delta
+	hurt_cooldown -= delta
+	Global.health += delta / 60
+	Global.health = clamp(Global.health, 0, Global.max_health)
 	
 	if Input.is_action_just_pressed("dash") and dash_cooldown <= 0:
-		speed = DASH_SPEED
+		speed = Global.dash_speed
 		dash_cooldown = 2
 		dash(dashes)
 		dashes += 1
 		
 		
 		
-	if swing_cooldown <= attack_speed - (attack_speed / 5):
+	if swing_cooldown <= Global.attack_speed - (Global.attack_speed / 5):
 		hand_collision.disabled = true
 		swinging = false
 	
@@ -70,15 +72,15 @@ func _physics_process(delta: float) -> void:
 		punch_sound.play()
 		hand_collision.disabled = false
 		swinging = true
-		swing_cooldown = attack_speed
+		swing_cooldown = Global.attack_speed
 		hand.position = Vector2(0,0)
 		
 	if swinging:
-		tool_sprite.scale = lerp(tool_sprite.scale, Vector2(1,1), delta * 60)
+		hand.scale = lerp(hand.scale, Vector2(1,1), delta * 60)
 		hand.position = lerp(hand.position, Vector2(24,0), delta * 40)
 	else:
-		tool_sprite.scale = lerp(tool_sprite.scale, Vector2(0,0), delta * 20)
-		hand.position = lerp(hand.position, Vector2(0,0), delta * 12)
+		hand.scale = lerp(hand.scale, Vector2(0,0), delta * 16)
+		hand.position = lerp(hand.position, Vector2(0,0), delta * 8)
 		
 	hand.global_rotation = 0
 		
@@ -100,7 +102,7 @@ func _physics_process(delta: float) -> void:
 				i.emitting = false
 		walking = false
 	
-	speed = lerp(speed, WALK_SPEED, delta * 20)
+	speed = lerp(speed, Global.walk_speed, delta * 20)
 	
 	
 	if Input.is_action_just_pressed("1"):
@@ -142,14 +144,35 @@ func dash(dash_idx) -> void:
 
 
 func _on_hand_area_area_entered(area: Area2D) -> void:
-	var object : Node2D = area.get_parent()
-	match tool_type:
-		ToolTypes.PICKAXE:
-			if object.is_in_group("pickaxe"):
-				object.hit(Global.pickaxes[Global.pickaxe_tier]['damage'])
-		ToolTypes.AXE:
-			if object.is_in_group("axe"):
-				object.hit(Global.axes[Global.axe_tier]['damage'])
-		ToolTypes.SWORD:
-			if object.is_in_group("sword"):
-				object.hit(Global.swords[Global.sword_tier]['damage'])
+	if not area.get_parent().is_in_group("enemy"):
+		var object : Node2D = area.get_parent()
+		match tool_type:
+			ToolTypes.PICKAXE:
+				if object.is_in_group("pickaxe"):
+					object.hit(Global.pickaxes[Global.pickaxe_tier]['damage'])
+			ToolTypes.AXE:
+				if object.is_in_group("axe"):
+					object.hit(Global.axes[Global.axe_tier]['damage'])
+			ToolTypes.SWORD:
+				if object.is_in_group("sword"):
+					object.hit(Global.swords[Global.sword_tier]['damage'])
+				
+func take_damage(amount : int) -> void:
+	if not dead:
+		if hurt_cooldown <= 0:
+			hurt_cooldown = 1
+			anim.play("hurt")
+			hurt_sound.play()
+			Global.health -= amount
+			if Global.health <= 0:
+				dead = true
+				Global.emit_signal("death")
+
+
+func _on_hand_area_body_entered(body: Node2D) -> void:
+	var required_type : ToolTypes = ToolTypes.SWORD
+	if body.is_in_group("rock_enemy"):
+		required_type = ToolTypes.PICKAXE
+	if tool_type == required_type:
+		if body.is_in_group("enemy"):
+			body.take_damage(Global.swords[Global.sword_tier]['damage'])

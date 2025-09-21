@@ -55,10 +55,16 @@ func _ready() -> void:
 
 	
 func generate_objects() -> void:
+	var max : int = 5
+	if chunk_pos.length() <= 1:
+		max = 10
+	elif chunk_pos.length() <= 3:
+		max = 7
 	for x in range(-8, 8):
 		for y in range(-8, 8):
-			if randi_range(0, 10) <= 0:
-				objects.set_cell(Vector2i(x,y), 1, Vector2i(0, 0), 1)
+			if randi_range(0, max) <= 0:
+				grass.set_cell(Vector2i(x,y), 0, Vector2i(3, 0))
+				objects.set_cell(Vector2i(x,y), randi_range(1,6), Vector2i(0, 0), 1)
 				
 	while len(object_list) <= 0:
 		await get_tree().create_timer(0.1).timeout

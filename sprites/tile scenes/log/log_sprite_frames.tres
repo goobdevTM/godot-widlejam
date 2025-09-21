@@ -1,0 +1,32 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://bsdav7eh51qxi"]
+
+[ext_resource type="Texture2D" uid="uid://cesnr8g7mugmj" path="res://sprites/tile scenes/log/break1.png" id="1_8sroh"]
+[ext_resource type="Texture2D" uid="uid://d2wwy1bl33c40" path="res://sprites/tile scenes/log/break2.png" id="2_6y2mg"]
+[ext_resource type="Texture2D" uid="uid://blsp8h45ivg2i" path="res://sprites/tile scenes/log/default.png" id="3_8sroh"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8sroh")
+}],
+"loop": true,
+"name": &"break1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_6y2mg")
+}],
+"loop": true,
+"name": &"break2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_8sroh")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]

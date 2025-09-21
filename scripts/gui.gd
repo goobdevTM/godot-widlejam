@@ -9,19 +9,40 @@ extends CanvasLayer
 @onready var minimap_coords: RichTextLabel = $Minimap/MinimapCoords
 @onready var hud: HBoxContainer = $HUD
 @onready var money: RichTextLabel = $Money
+@onready var health: ProgressBar = $Health
+@onready var landmines: RichTextLabel = $Landmines
+@onready var game_over: Control = $GameOver
+@onready var death_sfx: AudioStreamPlayer = $"../Death"
+@onready var fade: ColorRect = $Fade
+@onready var music: AudioStreamPlayer = $"../Music"
+@onready var main: Node2D = $"../.."
 
 var coords : Vector2i
 
 
-# Thanks to: https://stackoverflow.com/questions/77315722/split-screen-in-godot-3d-with-a-single-scene-containing-2-cameras
-# For teaching me how to render with 2 cameras without scene replication as in general SubViewport usage
 
+
+	
 
 func _ready() -> void:
+	game_over.hide()
 	sub_viewport.world_2d = get_viewport().world_2d
 	Global.hotbar_swapped.connect(update_hud)
+	Global.death.connect(death)
+	
+func death() -> void:
+	get_tree().paused = true
+	game_over.show()
+	death_sfx.play()
+	music.stop()
+	await get_tree().create_timer(1).timeout
+	main.exit_game()
+	
 	
 func _process(delta: float) -> void:
+	landmines.text = str(Global.land_mines)
+	health.value = Global.health
+	health.max_value = Global.max_health
 	money.text = "[right]$" + str(Global.money)
 	coords = round(Vector2(player.global_position.x, - player.global_position.y) / 256)
 	mini_camera.global_position = lerp(mini_camera.global_position, round(player.global_position / 256) * 256, delta * 8)

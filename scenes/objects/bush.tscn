@@ -1,0 +1,168 @@
+[gd_scene load_steps=18 format=3 uid="uid://cauxbclkwq1i3"]
+
+[ext_resource type="Script" uid="uid://do3s7ngj52fmj" path="res://scripts/object.gd" id="1_stiee"]
+[ext_resource type="PackedScene" uid="uid://i87cn7btor5v" path="res://scenes/enemy.tscn" id="2_3gwn7"]
+[ext_resource type="SpriteFrames" uid="uid://jwlgpackojn8" path="res://sprites/tile scenes/bush/bush_sprite_frames.tres" id="3_stiee"]
+[ext_resource type="Texture2D" uid="uid://bx6pvvpghg6qj" path="res://sprites/tile scenes/bush/default.png" id="4_stiee"]
+[ext_resource type="AudioStream" uid="uid://c6y6bksgedxb2" path="res://audio/sfx/sword_break.ogg" id="5_3gwn7"]
+[ext_resource type="AudioStream" uid="uid://ch5yaqnlqlu6w" path="res://audio/sfx/sword_hit.ogg" id="6_ob8b7"]
+
+[sub_resource type="Animation" id="Animation_a0y2b"]
+resource_name = "hit"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -1), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.09, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0698132, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_a03g0"]
+resource_name = "hit2"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -1), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.00999999, 0.1, 0.21),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0698132, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_46pka"]
+resource_name = "hit3"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a03g0"]
+_data = {
+&"hit": SubResource("Animation_a0y2b"),
+&"hit2": SubResource("Animation_a03g0"),
+&"hit3": SubResource("Animation_46pka")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1x7wo"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5aswp"]
+radius = 6.0
+
+[sub_resource type="Curve" id="Curve_6qvdj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.011236), -5.73034, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_a03g0"]
+curve = SubResource("Curve_6qvdj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_46pka"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+gravity = Vector3(0, 98, 0)
+scale_min = 0.1
+scale_max = 0.2
+alpha_curve = SubResource("CurveTexture_a03g0")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_if812"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("6_ob8b7")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_hk1vj"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("5_3gwn7")
+
+[node name="Bush" type="Node2D" groups=["sword"]]
+script = ExtResource("1_stiee")
+max_health = 3
+enemy = ExtResource("2_3gwn7")
+max_enemies = 1
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3_stiee")
+autoplay = "default"
+
+[node name="Anim" type="AnimationPlayer" parent="AnimatedSprite2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_a03g0")
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_1x7wo")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 24
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_5aswp")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+emitting = false
+texture = ExtResource("4_stiee")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_46pka")
+
+[node name="MineSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_if812")
+volume_db = 3.0
+bus = &"SFX"
+
+[node name="BreakSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_hk1vj")
+volume_db = 1.0
+bus = &"SFX"
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

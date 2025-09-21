@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://b3mjmnbllqod7"]
+[gd_scene load_steps=17 format=3 uid="uid://b3mjmnbllqod7"]
 
 [ext_resource type="Script" uid="uid://do3s7ngj52fmj" path="res://scripts/object.gd" id="1_cbfvs"]
+[ext_resource type="PackedScene" uid="uid://i87cn7btor5v" path="res://scenes/enemy.tscn" id="2_46pka"]
 [ext_resource type="SpriteFrames" uid="uid://dyb6feaqacei8" path="res://sprites/tile scenes/big rock/big_rock_sprite_frames.tres" id="2_a0y2b"]
 [ext_resource type="Texture2D" uid="uid://cjhna37muvg2i" path="res://sprites/tile scenes/big rock/default.png" id="3_a0y2b"]
 [ext_resource type="AudioStream" uid="uid://oytgo6iey5gq" path="res://audio/sfx/pickaxe_hit.ogg" id="4_6qvdj"]
@@ -116,6 +117,7 @@ stream_0/stream = ExtResource("5_a03g0")
 
 [node name="Object" type="Node2D" groups=["pickaxe"]]
 script = ExtResource("1_cbfvs")
+enemy = ExtResource("2_46pka")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_a0y2b")

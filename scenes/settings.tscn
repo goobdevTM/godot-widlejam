@@ -1,0 +1,247 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctx1ns7vklnm2"]
+
+[ext_resource type="Theme" uid="uid://cy2pfkk5apl5x" path="res://wood_theme.tres" id="1_6wm04"]
+[ext_resource type="Script" uid="uid://btxh6n8rx2rby" path="res://scripts/settings.gd" id="2_f4mfi"]
+[ext_resource type="FontFile" uid="uid://ddd0djkuaf70w" path="res://fonts/Vaticanus-G3yVG.ttf" id="3_es4n0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e1j6l"]
+bg_color = Color(0.16078432, 0.047058824, 0.02745098, 0.2509804)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5newe"]
+bg_color = Color(0.16078432, 0.047058824, 0.02745098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 3
+corner_detail = 1
+anti_aliasing = false
+
+[node name="Settings" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_6wm04")
+script = ExtResource("2_f4mfi")
+
+[node name="DarkBG" type="Panel" parent="."]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_e1j6l")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 15.0
+offset_right = -32.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 75)
+theme_override_styles/panel = SubResource("StyleBoxFlat_5newe")
+
+[node name="Title" type="RichTextLabel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_bottom = 25.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("3_es4n0")
+bbcode_enabled = true
+text = "[center]Settings"
+
+[node name="Master" type="HSlider" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = -14.0
+offset_right = 70.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="RichTextLabel" parent="Panel/Master"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -54.0
+offset_top = -23.0
+offset_right = 54.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("3_es4n0")
+bbcode_enabled = true
+text = "[center]Master"
+
+[node name="Music" type="HSlider" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = 18.0
+offset_right = -10.0
+offset_bottom = 34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="RichTextLabel" parent="Panel/Music"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -38.0
+offset_top = -20.0
+offset_right = 42.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("3_es4n0")
+bbcode_enabled = true
+text = "[center]Music"
+
+[node name="SFX" type="HSlider" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = 18.0
+offset_right = 70.0
+offset_bottom = 34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="RichTextLabel" parent="Panel/SFX"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -42.0
+offset_top = -20.0
+offset_right = 38.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("3_es4n0")
+bbcode_enabled = true
+text = "[center]SFX
+"
+
+[node name="ControlsButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 194.0
+offset_top = 130.0
+offset_right = 252.0
+offset_bottom = 146.0
+theme_override_font_sizes/font_size = 8
+text = "View Controls"
+
+[node name="QuitButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 122.0
+offset_right = 156.0
+offset_bottom = 146.0
+theme_override_font_sizes/font_size = 16
+text = "Quit"
+
+[node name="Controls" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 15.0
+offset_right = -32.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(128, 75)
+theme_override_styles/panel = SubResource("StyleBoxFlat_5newe")
+
+[node name="Title" type="RichTextLabel" parent="Controls"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_bottom = 25.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("3_es4n0")
+bbcode_enabled = true
+text = "[center]Controls"
+
+[node name="List" type="RichTextLabel" parent="Controls"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 43.0
+offset_top = 32.0
+offset_right = -43.0
+offset_bottom = 130.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.7411765, 0.46666667, 0.49803922, 1)
+theme_override_fonts/normal_font = ExtResource("3_es4n0")
+bbcode_enabled = true
+text = "[center]WASD - Move
+Arrows - Swing
+CTRL/Shift - Dash
+E - Interact
+1,2,3 - Select Item
+ESC - Settings/Exit"
+
+[node name="BackButton" type="Button" parent="Controls"]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 130.0
+offset_right = 252.0
+offset_bottom = 146.0
+theme_override_font_sizes/font_size = 8
+text = "Back"
+
+[connection signal="value_changed" from="Panel/Master" to="." method="_on_master_value_changed"]
+[connection signal="value_changed" from="Panel/Music" to="." method="_on_music_value_changed"]
+[connection signal="value_changed" from="Panel/SFX" to="." method="_on_sfx_value_changed"]
+[connection signal="pressed" from="Panel/ControlsButton" to="." method="_on_controls_button_pressed"]
+[connection signal="pressed" from="Panel/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Controls/BackButton" to="." method="_on_controls_back_button_pressed"]

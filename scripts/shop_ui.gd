@@ -21,6 +21,7 @@ func _ready() -> void:
 func open() -> void:
 	if not visible:
 		if not animating:
+			Global.in_shop = true
 			dark_bg.modulate = Color("290c0700")
 			scale = Vector2(0,0)
 			get_tree().paused = true
@@ -36,6 +37,7 @@ func open() -> void:
 func close() -> void:
 	if visible:
 		if not animating:
+			Global.in_shop = false
 			get_tree().paused = false
 			animating = true
 			var tween : Tween = create_tween()
@@ -131,6 +133,33 @@ func button_pressed(button : Button, upgrade : Dictionary, upgrade_idx):
 				Global.sword_tier += 1
 		await get_tree().create_timer(0).timeout
 		Global.emit_signal("hotbar_swapped")
+	if upgrade.has('var'):
+		match upgrade['var']:
+			1:
+				Global.walk_speed *= upgrade['inc_mult']
+			2:
+				Global.dash_speed *= upgrade['inc_mult']
+			3:
+				Global.attack_speed /= upgrade['inc_mult']
+			4:
+				Global.max_health += upgrade['inc_add']
+				Global.health += (upgrade['inc_add'] / 2)
+			5:
+				Global.health = Global.max_health
+			6:
+				Global.money_mult += upgrade['inc_add']
+			7:
+				Global.chunk_money_mult += upgrade['inc_add']
+			8:
+				Global.land_mines += upgrade['inc_add']
+
+	await get_tree().create_timer(0).timeout
+	reroll(false)
+
+		
+		
+
+		
 func _input(event: InputEvent) -> void:
 	if visible and animating == false:
 		if event is InputEventKey:

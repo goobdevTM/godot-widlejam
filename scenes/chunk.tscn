@@ -1,9 +1,14 @@
-[gd_scene load_steps=10 format=4 uid="uid://brunj3a6qwm7s"]
+[gd_scene load_steps=20 format=4 uid="uid://brunj3a6qwm7s"]
 
 [ext_resource type="Texture2D" uid="uid://dvxp0p0jaban6" path="res://sprites/tiles.png" id="1_jas4a"]
 [ext_resource type="Script" uid="uid://cau5a545bi02q" path="res://scripts/chunk.gd" id="1_jtw3q"]
-[ext_resource type="PackedScene" uid="uid://b3mjmnbllqod7" path="res://scenes/object.tscn" id="3_c3gog"]
+[ext_resource type="PackedScene" uid="uid://ccpu8a3cpkrv0" path="res://scenes/objects/big_rock.tscn" id="3_7we6h"]
+[ext_resource type="PackedScene" uid="uid://dnpsn21pn2ej6" path="res://scenes/objects/rock1.tscn" id="4_uodxn"]
 [ext_resource type="FontFile" uid="uid://c1rbege7qvcvu" path="res://fonts/Stepalange-x3BLm.otf" id="4_y5xp6"]
+[ext_resource type="PackedScene" uid="uid://dee8t363c3krt" path="res://scenes/objects/rock2.tscn" id="5_o1dn5"]
+[ext_resource type="PackedScene" uid="uid://b0arfsq73dt1m" path="res://scenes/objects/stump.tscn" id="6_wh4tm"]
+[ext_resource type="PackedScene" uid="uid://bxl0w86p8b2bd" path="res://scenes/objects/log.tscn" id="7_l2nb0"]
+[ext_resource type="PackedScene" uid="uid://cauxbclkwq1i3" path="res://scenes/objects/bush.tscn" id="8_7r1df"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jtw3q"]
 size = Vector2(254, 254)
@@ -25,11 +30,36 @@ texture = ExtResource("1_jas4a")
 
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_y5xp6"]
 resource_name = "big_rock"
-scenes/1/scene = ExtResource("3_c3gog")
+scenes/1/scene = ExtResource("3_7we6h")
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_36p1u"]
+resource_name = "rock_1"
+scenes/1/scene = ExtResource("4_uodxn")
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_naatp"]
+resource_name = "rock_2"
+scenes/1/scene = ExtResource("5_o1dn5")
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_opqbp"]
+resource_name = "stump"
+scenes/1/scene = ExtResource("6_wh4tm")
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_10u34"]
+resource_name = "log"
+scenes/1/scene = ExtResource("7_l2nb0")
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_fmwtx"]
+resource_name = "bush"
+scenes/1/scene = ExtResource("8_7r1df")
 
 [sub_resource type="TileSet" id="TileSet_dinhu"]
 sources/0 = SubResource("TileSetAtlasSource_jtw3q")
 sources/1 = SubResource("TileSetScenesCollectionSource_y5xp6")
+sources/2 = SubResource("TileSetScenesCollectionSource_36p1u")
+sources/3 = SubResource("TileSetScenesCollectionSource_naatp")
+sources/4 = SubResource("TileSetScenesCollectionSource_opqbp")
+sources/5 = SubResource("TileSetScenesCollectionSource_10u34")
+sources/6 = SubResource("TileSetScenesCollectionSource_fmwtx")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c3gog"]
 size = Vector2(257, 2)
@@ -172,7 +202,7 @@ fit_content = true
 scroll_active = false
 
 [node name="Objects" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAD6/wQAAQAAAAAAAQA=")
+tile_map_data = PackedByteArray("AAD6/wUABAAAAAAAAQA=")
 tile_set = SubResource("TileSet_dinhu")
 
 [node name="ObjectRemovedDetect" type="Area2D" parent="."]
