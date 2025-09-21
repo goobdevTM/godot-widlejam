@@ -16,6 +16,7 @@ signal fade_done
 func exit_game() -> void:
 	fade_in()
 	await fade_done
+	Global.emit_signal("quit")
 	game.queue_free()
 	Global.save()
 	menu = MENU.instantiate()

@@ -4,6 +4,7 @@ extends Control
 @onready var controls: Panel = $Controls
 @onready var dark_bg: Panel = $DarkBG
 @onready var panel: Panel = $Panel
+@onready var score: RichTextLabel = $Panel/Score
 
 @onready var master_slider: HSlider = $Panel/Master
 @onready var master_title: RichTextLabel = $Panel/Master/Title
@@ -21,10 +22,6 @@ extends Control
 var animating : bool = false
 
 func _ready() -> void:
-	await get_tree().create_timer(0).timeout
-	if not in_game:
-		quit_button.pressed.disconnect(_on_quit_button_pressed)
-		quit_button.queue_free()
 	master_slider.value = Global.volumes['master']
 	master_title.text = "[center]Master: " + str(int(Global.volumes['master']))
 	
@@ -53,6 +50,18 @@ func _input(event) -> void:
 func open() -> void:
 	if not visible:
 		if not animating:
+			Global.check_highscore()
+			score.text = "Score:
+-Enemies: " + str(Global.score[0]) + "
+-Chunks: " + str(Global.score[1]) + "
+-Money: " + str(Global.score[2]) + "
+
+Highscore:
+-Enemies: " + str(Global.highscore[0]) + "
+-Chunks: " + str(Global.highscore[1]) + "
+-Money: " + str(Global.highscore[2])
+
+
 			dark_bg.modulate = Color("290c0700")
 			panel.scale = Vector2(0,0)
 			get_tree().paused = true
@@ -118,4 +127,4 @@ func _on_sfx_value_changed(value: float) -> void:
 
 
 func _on_quit_button_pressed() -> void:
-	get_parent().get_parent().get_parent().exit_game()
+	Global.save_and_quit()

@@ -1,11 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://cednpfwly3lho"]
+[gd_scene load_steps=11 format=3 uid="uid://cednpfwly3lho"]
 
 [ext_resource type="Texture2D" uid="uid://biulu56r5376t" path="res://sprites/guide.png" id="1_or254"]
 [ext_resource type="Script" uid="uid://dco1aqloibr1i" path="res://scripts/guide.gd" id="1_rb1b7"]
 [ext_resource type="FontFile" uid="uid://ddd0djkuaf70w" path="res://fonts/Vaticanus-G3yVG.ttf" id="2_0el4p"]
+[ext_resource type="AudioStream" uid="uid://c6a7p8l1j13k4" path="res://audio/sfx/guide_speak.ogg" id="3_wxloj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_twgab"]
 radius = 13.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fd7ko"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("3_wxloj")
 
 [sub_resource type="Animation" id="Animation_8r1wq"]
 length = 0.001
@@ -73,20 +79,28 @@ shape = SubResource("CircleShape2D_twgab")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_or254")
 
+[node name="Speak" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_fd7ko")
+
 [node name="Hint" type="RichTextLabel" parent="."]
-offset_left = -34.0
-offset_top = -17.0
-offset_right = 34.0
+offset_left = -46.0
+offset_top = -33.0
+offset_right = 46.0
 offset_bottom = -9.0
 scale = Vector2(1e-05, 1e-05)
-pivot_offset = Vector2(32, 4)
+pivot_offset = Vector2(46, 33)
 mouse_filter = 2
 theme_override_fonts/normal_font = ExtResource("2_0el4p")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
-text = "[center][E] - ask for help"
+text = "[center]
+
+[E] - ask for help"
 
 [node name="Anim" type="AnimationPlayer" parent="Hint"]
 libraries = {
 &"": SubResource("AnimationLibrary_ajxib")
 }
+
+[connection signal="body_entered" from="TalkArea" to="." method="_on_talk_area_body_entered"]
+[connection signal="body_exited" from="TalkArea" to="." method="_on_talk_area_body_exited"]

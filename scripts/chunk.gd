@@ -18,6 +18,7 @@ extends Node2D
 
 @export var first : bool = false
 
+@onready var object_removed_detect: Area2D = $ObjectRemovedDetect
 
 
 signal finished
@@ -35,7 +36,7 @@ var complete : bool = false
 var object_list : Array[Node2D] = []
 
 var on_screen : bool
-
+	
 func _ready() -> void:
 	if first:
 		text_data.hide()
@@ -247,3 +248,6 @@ func update_neighbors_from_dict() -> void:
 			neighbors[3] = Global.chunks[chunk_pos + Vector2i(1,0)]
 	else:
 		Global.new_chunk_generated.disconnect(update_neighbors_from_dict)
+		
+func _exit_tree() -> void:
+	queue_free()

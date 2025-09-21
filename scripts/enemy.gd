@@ -86,6 +86,7 @@ func take_damage(amount : int) -> void:
 		hurt_sound.play()
 		health -= amount
 		if health <= 0:
+			Global.score[0] += 1
 			particles.emitting = true
 			dead = true
 			hurt_sound.stop()

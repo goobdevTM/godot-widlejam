@@ -12,6 +12,7 @@ func _ready() -> void:
 	hi.play()
 func new_chunk_unlocked(pos : Vector2) -> void:
 	if not unlocked_chunks.has(pos):
+		Global.score[1] += 1
 		Global.money += 100 * Global.chunk_money_mult
 		unlocked_chunks.append(pos)
 		new_chunk_sfx.play()

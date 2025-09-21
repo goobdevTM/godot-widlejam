@@ -2,6 +2,9 @@ extends CharacterBody2D
 
 class_name Player
 
+const MINE = preload("uid://recuq48h84x4")
+
+
 @onready var model: Node2D = $Model
 @onready var anim: AnimationPlayer = $Model/Anim
 @onready var dash_effects: Node2D = $"../Effects/Dash"
@@ -13,6 +16,7 @@ class_name Player
 @onready var tool_sprite: Sprite2D = $HandOffset/Hand/Tool
 @onready var hand_collision: CollisionShape2D = $HandOffset/Hand/Tool/HandArea/CollisionShape2D
 @onready var hurt_sound: AudioStreamPlayer = $HurtSound
+@onready var buzzer: AudioStreamPlayer = $"../Buzzer"
 
 
 enum ToolTypes {
@@ -119,6 +123,17 @@ func _physics_process(delta: float) -> void:
 		tool_type = ToolTypes.AXE
 		Global.selected_slot = 2
 		Global.emit_signal("hotbar_swapped")
+		
+		
+	if Input.is_action_just_pressed("place_mine"):
+		if Global.land_mines > 0:
+			var mine = MINE.instantiate()
+			mine.global_position = global_position
+			get_parent().add_child(mine)
+			get_parent().move_child(mine, 0)
+			Global.land_mines -= 1
+		else:
+			buzzer.play()
 		
 		
 	move_and_slide()

@@ -4,6 +4,7 @@ signal new_chunk_generated
 signal hotbar_swapped
 signal enter_shop
 signal death
+signal quit
 
 var in_shop : bool = false
 
@@ -27,6 +28,10 @@ var walk_speed : float = 20
 var dash_speed  : float = 100
 var attack_speed : float = 1
 
+#enemies, chunks, money
+var score : Array = [0,0,0]
+
+var highscore : Array = [0,0,0]
 
 var pickaxes : Array[Dictionary] = [
 	{'name': "Wood Pickaxe", 'damage': 1, 'sprite': "res://sprites/tools/pickaxe/wood_pickaxe.png"},
@@ -50,6 +55,7 @@ var swords : Array[Dictionary] = [
 	] 
 	
 	
+	
 var upgrades : Array = [
 	{'name': "New Pickaxe", 'cost': 50, 'sprite': "res://sprites/tools/pickaxe/wood_pickaxe.png", 'tool': 0, 'mult': 2},
 	{'name': "New Axe", 'cost': 50, 'sprite': "res://sprites/tools/axe/wood_axe.png", 'tool': 1, 'mult': 2},
@@ -61,9 +67,9 @@ var upgrades : Array = [
 	{'name': "Recover Health", 'cost': 15, 'sprite': "res://sprites/heart_16.png", 'var': 5, 'recover' : true},
 	{'name': "+Money Per Chunk", 'cost': 50, 'sprite': "res://sprites/money_chunk.png", 'var': 6, 'inc_add': 0.35, 'mult': 1.25},
 	{'name': "+Money Per Object", 'cost': 50, 'sprite': "res://sprites/money_object.png", 'var': 7, 'inc_add': 0.25, 'mult': 1.25},
-	{'name': "Landmine (x1)", 'cost': 10, 'sprite': "res://sprites/enemies/pumpkin.png", 'mult': 1.1, 'var': 8, 'inc_add': 1},
-	{'name': "Landmine (x3)", 'cost': 25, 'sprite': "res://sprites/enemies/pumpkin.png", 'mult': 1.1, 'var': 8, 'inc_add': 3},
-	{'name': "Landmine (x5)", 'cost': 40, 'sprite': "res://sprites/enemies/pumpkin.png", 'mult': 1.1, 'var': 8, 'inc_add': 5},
+	{'name': "Landmine (x1)", 'cost': 10, 'sprite': "res://sprites/mine.png", 'mult': 1.1, 'var': 8, 'inc_add': 1},
+	{'name': "Landmine (x3)", 'cost': 25, 'sprite': "res://sprites/mine_3.png", 'mult': 1.1, 'var': 8, 'inc_add': 3},
+	{'name': "Landmine (x5)", 'cost': 40, 'sprite': "res://sprites/mine_5.png", 'mult': 1.1, 'var': 8, 'inc_add': 5},
 	]
 	
 var tips : PackedStringArray = [
@@ -71,7 +77,6 @@ var tips : PackedStringArray = [
 	"Use the right tool for the job!",
 	"More money = more good.",
 	"Place landmines [Q] to blow up enemies.",
-	"Talk to the Guide if you are stuck.",
 	"Subscribe to GlaggleWares!",
 	"Focus on one chunk at a time.",
 	"Kill enemies before mining other objects.",
@@ -79,7 +84,9 @@ var tips : PackedStringArray = [
 	"If you dont like the shop's upgrades, re-roll!",
 	"Press [CTRL] or [SHIFT] to dash!",
 	"Use the arrow keys to attack in a certain direction!",
-	"Unlock as many chunks as possible!"
+	"Unlock as many chunks as possible!",
+	"Don't stand too close to a mine!",
+	"Don't die!"
 ]
 
 
@@ -95,13 +102,28 @@ const save_path : String = "user://save.save"
 func _ready() -> void:
 	load_data()
 	
-func load_data() -> void:
-	pass
-	
 func save() -> void:
-	pass
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	file.store_var(highscore)
+	file.store_var(volumes)
+	
+func load_data() -> void:
+	if FileAccess.file_exists(save_path):
+		var file = FileAccess.open(save_path, FileAccess.READ)
+		highscore = file.get_var()
+		volumes = file.get_var()
+		
+func check_highscore() -> void:
+	var index : int = 0
+	for i in highscore:
+		if score[index] > i:
+			highscore[index] = score[index]
+		index += 1
+	
 	
 func save_and_quit() -> void:
+	check_highscore()
+	await get_tree().create_timer(0).timeout
 	save()
 	await get_tree().create_timer(0).timeout
 	get_tree().quit()

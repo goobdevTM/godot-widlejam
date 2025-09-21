@@ -162,11 +162,6 @@ text = "Settings"
 layout_mode = 2
 text = "Quit"
 
-[node name="Settings" parent="." instance=ExtResource("3_con2f")]
-visible = false
-offset_right = 320.0
-offset_bottom = 180.0
-
 [node name="Logo" type="Sprite2D" parent="."]
 position = Vector2(160, 38)
 texture = ExtResource("5_4ytvr")
@@ -176,6 +171,11 @@ libraries = {
 &"": SubResource("AnimationLibrary_13sgg")
 }
 autoplay = "default"
+
+[node name="Settings" parent="." instance=ExtResource("3_con2f")]
+visible = false
+offset_right = 320.0
+offset_bottom = 180.0
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3

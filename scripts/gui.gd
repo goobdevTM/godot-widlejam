@@ -16,6 +16,7 @@ extends CanvasLayer
 @onready var fade: ColorRect = $Fade
 @onready var music: AudioStreamPlayer = $"../Music"
 @onready var main: Node2D = $"../.."
+@onready var death_music: AudioStreamPlayer = $"../DeathMusic"
 
 var coords : Vector2i
 
@@ -35,12 +36,13 @@ func death() -> void:
 	game_over.show()
 	death_sfx.play()
 	music.stop()
-	await get_tree().create_timer(1).timeout
-	main.exit_game()
+	await get_tree().create_timer(5).timeout
+	death_music.play()
 	
 	
 func _process(delta: float) -> void:
-	landmines.text = str(Global.land_mines)
+	Global.score[2] = Global.money
+	landmines.text = "[right]" + str(Global.land_mines)
 	health.value = Global.health
 	health.max_value = Global.max_health
 	money.text = "[right]$" + str(Global.money)
