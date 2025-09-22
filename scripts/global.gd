@@ -14,7 +14,7 @@ var pickaxe_tier : int = 0
 var axe_tier : int = 0
 var sword_tier : int = 0
 
-var money : int = 10000
+var money : int = 0
 var money_mult : float = 0.25
 var chunk_money_mult : float = 0.25
 var selected_slot : int = 0

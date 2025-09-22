@@ -28,6 +28,7 @@ func _on_detect_body_entered(body: Node2D) -> void:
 			i.take_damage(99999)
 		if player_to_explode:
 			player_to_explode.take_damage(99999)
+		queue_free()
 
 
 func _on_detect_body_exited(body: Node2D) -> void:
